@@ -78,6 +78,20 @@ const products: Product[] = [
 
 const ProductList = () => {
   const handleBuy = async (price: number) => {
+    const accounts = await window.ethereum.request({
+      method: 'eth_requestAccounts'
+    });
+    const address = accounts[0];
+    try {
+      const result = await buyProduct(address, price);
+      if(result.isSuccess) {
+        toast.success(`Sucesso sua transação foi confirmada ${result.txHash}`)
+      } else {
+        toast.error(`Ocorreu um erro: ${result.error}`)
+      }
+    } catch(e) { 
+      toast.error(`Erro no envio da transação: ${e}`)
+    }
   }
 
   return (
